@@ -67,7 +67,7 @@ std::size_t BookList::books_sl_list_size() const
     /// Some implementations of a singly linked list maintain the size (number of elements in the list).  std::forward_list does
     /// not. The size of singly linked list must be calculated on demand by walking the list from beginning to end counting the
     /// number of elements visited.  The STL's std::distance() function does that, or you can write your own loop.
-
+    //https://www.geeksforgeeks.org/find-length-of-a-linked-list-iterative-and-recursive/
   /////////////////////// END-TO-DO (1) ////////////////////////////
 }
 
