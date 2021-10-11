@@ -352,6 +352,7 @@ bool Book::operator>=(const Book & rhs) const noexcept
 {
 	// Books are ordered (sorted) by ISBN, author, title, then price.
 
+  bool compare = true;
   if (isbn() == rhs.isbn())
 {
     if (author() == rhs.author())
