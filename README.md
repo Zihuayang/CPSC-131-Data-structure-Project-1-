@@ -3,4 +3,5 @@
 Group members:
 
 Zihua Yang zihuayang@csu.fullerton.edu
-Charles Babbage charlesbab@csu.fullerton.edu
+Radhika Sharma radhikasharma@csu.fullerton.edu
+Shivam Sudame ssudame0@csu.fullerton.edu
