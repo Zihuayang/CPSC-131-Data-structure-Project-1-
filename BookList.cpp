@@ -120,7 +120,7 @@ BookList& BookList::operator+=(const std::initializer_list<Book> &rhs)
 
     for (auto&& book : rhs) 
     {
-        BookList::insert(book, Position::BOTTOM);
+        insert(book, Position::BOTTOM);
     }
 
     /////////////////////// END-TO-DO (2) ////////////////////////////
@@ -142,7 +142,7 @@ BookList& BookList::operator+=(const BookList & rhs)
 
     for (auto&& book : rhs._books_vector) 
     {
-        BookList::insert(book, Position::BOTTOM);
+        insert(book, Position::BOTTOM);
     }
 
     /////////////////////// END-TO-DO (3) ////////////////////////////
@@ -170,7 +170,11 @@ std::size_t BookList::size() const
       /// All the containers are the same size, so pick one and return the size of that.  Since the forward_list has to calculate the
       /// size on demand, stay away from using that one.
 
-    return _books_vector.size();
+    
+
+    size_t size = std::distance(_books_vector.begin(), _books_vector.end());
+
+    return size;
     /////////////////////// END-TO-DO (4) ////////////////////////////
 }
 
@@ -308,9 +312,9 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
           /// Behind the scenes, std::vector::insert() shifts to the right everything at and after the insertion point, just like you
           /// did for the array above.
 
-        std::next(_books_vector.begin(), offsetFromTop);
+        std::vector<Book>::iterator it = _books_vector.begin() + offsetFromTop;
 
-        _books_vector.insert(_books_vector.begin(), book);
+        _books_vector.insert(it, book);        
 
         /////////////////////// END-TO-DO (8) ////////////////////////////
     } // Insert into vector
@@ -325,9 +329,14 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
           /// zero-based offset from the top to an iterator by advancing _books_dl_list.begin() offsetFromTop times.  The STL has a
           /// function called std::next() that does that, or you can write your own loop.
         
-        std::next(_books_dl_list.begin(),offsetFromTop);
+        std::list<Book>::iterator it = _books_dl_list.begin();
 
-        _books_dl_list.insert(_books_dl_list.begin(), book);
+        for (int i = 0; i < offsetFromTop; i++)
+        {
+            it++;
+        }
+
+        _books_dl_list.insert(it, book);
         
         /////////////////////// END-TO-DO (9) ////////////////////////////
     } // Insert into doubly linked list
@@ -343,9 +352,14 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
           /// _books_sl_list.before_begin() offsetFromTop times.  The STL has a function called std::next() that does that, or you can
           /// write your own loop.
 
-        std::next(_books_sl_list.begin(), offsetFromTop - 1);
+        std::forward_list<Book>::iterator it = _books_sl_list.begin();
 
-        _books_sl_list.insert_after(_books_sl_list.begin(), book);
+        for (int i = 1; i < offsetFromTop; i++)
+        {
+            it++;
+        }
+
+        _books_sl_list.insert_after(it, book);
 
         /////////////////////// END-TO-DO (10) ////////////////////////////
     } // Insert into singly linked list
@@ -410,9 +424,9 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// Behind the scenes, std::vector::erase() shifts to the left everything after the insertion point, just like you did for the
           /// array above.
 
-        std::next(_books_vector.begin(), offsetFromTop);
+        std::vector<Book>::iterator it = _books_vector.begin() + offsetFromTop;
 
-        _books_vector.erase(_books_vector.begin());
+        _books_vector.erase(it);
 
         /////////////////////// END-TO-DO (12) ////////////////////////////
     } // Remove from vector
@@ -427,9 +441,14 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// offset from the top to an iterator by advancing _books_dl_list.begin() offsetFromTop times.  The STL has a function called
           /// std::next() that does that, or you can write your own loop.
 
-        std::next(_books_dl_list.begin(), offsetFromTop);
+        std::list<Book>::iterator it = _books_dl_list.begin();
 
-        _books_dl_list.erase(_books_dl_list.begin());
+        for (int i = 0; i < offsetFromTop; i++)
+        {
+            it++;
+        }
+
+        _books_dl_list.erase(it);
 
         /////////////////////// END-TO-DO (13) ////////////////////////////
     } // Remove from doubly linked list
@@ -445,9 +464,14 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// _books_sl_list.before_begin() offsetFromTop times.  The STL has a function called std::next() that does that, or you can
           /// write your own loop.
 
-        std::next(_books_sl_list.begin(), offsetFromTop - 1);
+        std::forward_list<Book>::iterator it = _books_sl_list.begin();
 
-        _books_sl_list.erase_after(_books_sl_list.begin());
+        for (int i = 1; i < offsetFromTop; i++)
+        {
+            it++;
+        }
+
+        _books_sl_list.erase_after(it);
 
 
         /////////////////////// END-TO-DO (14) ////////////////////////////
