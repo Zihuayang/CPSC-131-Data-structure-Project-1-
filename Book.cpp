@@ -13,17 +13,21 @@
 
 // Default and Conversion Constructor
 Book::Book(std::string title, std::string author, std::string isbn, double price)
-
 {
+/*
+  : _isbn{ std::move(isbn) },
+  _title{ std::move(title) },
+  _author{ std::move(author) },
+  _price { (price) }
+  {}
+*/
+
     _title = title;
     _author = author;
     _isbn = isbn;
     _price = price;
+
 }
-
-
-
-
 
 // Copy constructor
 Book::Book(Book const& other)
@@ -168,7 +172,7 @@ bool Book::operator==(const Book& rhs) const noexcept
     // and then the most likely to be different first.
 
     return _price == rhs._price && _isbn == rhs._isbn && _title == rhs._title && _author == rhs._author;
-    
+
 }
 
 // operator!=

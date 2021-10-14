@@ -68,10 +68,10 @@ std::size_t BookList::books_sl_list_size() const
       /// not. The size of singly linked list must be calculated on demand by walking the list from beginning to end counting the
       /// number of elements visited.  The STL's std::distance() function does that, or you can write your own loop.
       //https://www.geeksforgeeks.org/find-length-of-a-linked-list-iterative-and-recursive/
-    
+
     return std::distance(_books_sl_list.begin(), _books_sl_list.end());
-    
-      
+
+
       /////////////////////// END-TO-DO (1) ////////////////////////////
 }
 
@@ -103,7 +103,9 @@ BookList::~BookList() = default;
 
 BookList::BookList(const std::initializer_list<Book> &initList)
 {
+
     for (auto&& book : initList)   insert(book, Position::BOTTOM);
+
 
     // Verify the internal book list state is still consistent amongst the four containers
     if (!containersAreConsistent())   throw BookList::InvalidInternalState_Ex("Container consistency error" exception_location);
@@ -118,7 +120,7 @@ BookList& BookList::operator+=(const std::initializer_list<Book> &rhs)
       /// The input type is a container of books accessible with iterators like all the other containers.  The constructor above gives
       /// an example.  Use BookList::insert() to insert at the bottom.
 
-    for (auto&& book : rhs) 
+    for (auto book : rhs)
     {
         insert(book, Position::BOTTOM);
     }
@@ -140,11 +142,20 @@ BookList& BookList::operator+=(const BookList & rhs)
       /// Walk the container you picked inserting its books to the bottom of this book list. Use BookList::insert() to insert at the
       /// bottom.
 
-    for (auto&& book : rhs._books_vector) 
+    for (auto book : rhs._books_vector)
     {
         insert(book, Position::BOTTOM);
     }
 
+
+    /*
+    for (int i = 0; i < _books_vector.size(); i++)
+    {
+        Book book = _books_vector[i];
+
+        insert(book, Position::BOTTOM);
+    }
+    */
     /////////////////////// END-TO-DO (3) ////////////////////////////
 
     // Verify the internal book list state is still consistent amongst the four containers
@@ -170,11 +181,14 @@ std::size_t BookList::size() const
       /// All the containers are the same size, so pick one and return the size of that.  Since the forward_list has to calculate the
       /// size on demand, stay away from using that one.
 
-    
 
+      /*
     size_t size = std::distance(_books_vector.begin(), _books_vector.end());
-
     return size;
+    */
+
+    return _books_vector.size();
+
     /////////////////////// END-TO-DO (4) ////////////////////////////
 }
 
@@ -190,19 +204,33 @@ std::size_t BookList::find(const Book & book) const
       /// size of this book list as an indicator the book does not exist.  The book will be in the same position in all the containers
       /// (array, vector, list, and forward_list) so pick just one of those to search.  The STL provides the find() function that is a
       /// perfect fit here, but you may also write your own loop.
-  
+
+
+
+
+        if (std::find(_books_dl_list.begin(), _books_dl_list.end(), book) != _books_dl_list.end())
+        {
+            return std::distance(_books_dl_list.begin(), std::find(_books_dl_list.begin(), _books_dl_list.end(), book));
+        }
+        else {
+          return _books_dl_list.size();
+        }
+
+
+    /*
     size_t pos = size();
-    
-    for (int i = 0; i < size(); i++)
+    for (int i = 0; i < size(); i--)
     {
         if (_books_vector[i] == book)
         {
             pos = i;
+            return pos;
         }
+        else {
+      return size();
     }
-
-    return pos;
-
+  }
+  */
     /////////////////////// END-TO-DO (5) ////////////////////////////
 }
 
@@ -243,12 +271,16 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
     ///////////////////////// TO-DO (6) //////////////////////////////
       /// Silently discard duplicate items from getting added to the book list.  If the to-be-inserted book is already in the list,
       /// simply return.
-
+      /*
     if (find(book) == size())
     {
         return *this;
     }
-
+    */
+    if (offsetFromTop != find(book))
+    {
+        return *this;
+    }
     /////////////////////// END-TO-DO (6) ////////////////////////////
 
 
@@ -288,12 +320,12 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
             _books_array[offsetFromTop] = book;
             _books_array_size++;
         }
-        else 
+        else
         {
             throw BookList::CapacityExceeded_Ex("Capacity Exceeded" exception_location);
         }
 
-        
+
 
 
         /////////////////////// END-TO-DO (7) ////////////////////////////
@@ -312,10 +344,21 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
           /// Behind the scenes, std::vector::insert() shifts to the right everything at and after the insertion point, just like you
           /// did for the array above.
 
-        std::vector<Book>::iterator it = _books_vector.begin() + offsetFromTop;
 
-        _books_vector.insert(it, book);        
 
+        _books_vector.insert(std::next(_books_vector.begin(), offsetFromTop), book);
+
+
+
+        /*
+        if (offsetFromTop < size()) {
+        for (int i = 0; i < offsetFromTop; i++)
+        {
+          _books_vector.begin();
+        }
+        std::next(_books_vector.begin());
+      }
+      */
         /////////////////////// END-TO-DO (8) ////////////////////////////
     } // Insert into vector
 
@@ -328,16 +371,18 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
           /// takes a pointer (or more accurately, an iterator) that points to the book to insert before.  You need to convert the
           /// zero-based offset from the top to an iterator by advancing _books_dl_list.begin() offsetFromTop times.  The STL has a
           /// function called std::next() that does that, or you can write your own loop.
-        
-        std::list<Book>::iterator it = _books_dl_list.begin();
 
+        _books_dl_list.insert(std::next(_books_dl_list.begin(), offsetFromTop), book);
+
+        /*
+        if (offsetFromTop < size()) {
         for (int i = 0; i < offsetFromTop; i++)
         {
-            it++;
+          _books_dl_list.begin();
         }
-
-        _books_dl_list.insert(it, book);
-        
+        std::next(_books_dl_list.begin());
+      }
+      */
         /////////////////////// END-TO-DO (9) ////////////////////////////
     } // Insert into doubly linked list
 
@@ -352,14 +397,11 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
           /// _books_sl_list.before_begin() offsetFromTop times.  The STL has a function called std::next() that does that, or you can
           /// write your own loop.
 
-        std::forward_list<Book>::iterator it = _books_sl_list.begin();
+        _books_sl_list.insert_after(std::next(_books_sl_list.before_begin(), offsetFromTop), book);
 
-        for (int i = 1; i < offsetFromTop; i++)
-        {
-            it++;
-        }
 
-        _books_sl_list.insert_after(it, book);
+
+
 
         /////////////////////// END-TO-DO (10) ////////////////////////////
     } // Insert into singly linked list
@@ -401,6 +443,7 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// "std::move()" example and in "Vector (simplified)/Vector.hpp" for a "write your own loop" example.  Also see
           /// RationalArray::remove() in RationalArray.cpp in our Rational Number Case Study examples.
 
+        if (offsetFromTop < size()) {
         for (int i = offsetFromTop; i < size(); i++)
         {
             _books_array[i] = _books_array[i + 1];
@@ -408,6 +451,7 @@ BookList& BookList::remove(std::size_t offsetFromTop)
 
         _books_array_size--;
 
+      }
         /////////////////////// END-TO-DO (11) ////////////////////////////
     } // Remove from array
 
@@ -424,9 +468,7 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// Behind the scenes, std::vector::erase() shifts to the left everything after the insertion point, just like you did for the
           /// array above.
 
-        std::vector<Book>::iterator it = _books_vector.begin() + offsetFromTop;
-
-        _books_vector.erase(it);
+        _books_vector.erase(std::next(_books_vector.begin(), offsetFromTop));
 
         /////////////////////// END-TO-DO (12) ////////////////////////////
     } // Remove from vector
@@ -441,14 +483,7 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// offset from the top to an iterator by advancing _books_dl_list.begin() offsetFromTop times.  The STL has a function called
           /// std::next() that does that, or you can write your own loop.
 
-        std::list<Book>::iterator it = _books_dl_list.begin();
-
-        for (int i = 0; i < offsetFromTop; i++)
-        {
-            it++;
-        }
-
-        _books_dl_list.erase(it);
+      _books_dl_list.erase(std::next(_books_dl_list.begin(), offsetFromTop));
 
         /////////////////////// END-TO-DO (13) ////////////////////////////
     } // Remove from doubly linked list
@@ -464,14 +499,8 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// _books_sl_list.before_begin() offsetFromTop times.  The STL has a function called std::next() that does that, or you can
           /// write your own loop.
 
-        std::forward_list<Book>::iterator it = _books_sl_list.begin();
+      _books_sl_list.erase_after(std::next(_books_sl_list.before_begin(), offsetFromTop));
 
-        for (int i = 1; i < offsetFromTop; i++)
-        {
-            it++;
-        }
-
-        _books_sl_list.erase_after(it);
 
 
         /////////////////////// END-TO-DO (14) ////////////////////////////
@@ -558,12 +587,11 @@ std::istream& operator>>(std::istream & stream, BookList & bookList)
 
     stream >> count;
     Book book;
-
     for (int i = 0; i < count; i++)
     {
-        stream >> label_holder;
+        stream.ignore(5);
         stream >> book;
-        bookList.insert(book, 0);
+        bookList.insert(book, i);
     }
 
     /////////////////////// END-TO-DO (16) ////////////////////////////
@@ -627,6 +655,7 @@ int BookList::compare(const BookList & other) const
 
     /////////////////////// END-TO-DO (17) ////////////////////////////
 }
+
 
 
 
