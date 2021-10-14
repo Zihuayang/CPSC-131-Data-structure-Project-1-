@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="6" failures="0" disabled="0" errors="0" time="0.002" timestamp="2021-10-13T21:42:50" name="AllTests">
+  <testsuite name="ConstructorsAndAssignment" tests="1" failures="0" disabled="0" errors="0" time="0" timestamp="2021-10-13T21:42:50">
+    <testcase name="Unused" status="run" result="completed" time="0" timestamp="2021-10-13T21:42:50" classname="ConstructorsAndAssignment" />
+  </testsuite>
+  <testsuite name="Accessors" tests="1" failures="0" disabled="0" errors="0" time="0.001" timestamp="2021-10-13T21:42:50">
+    <testcase name="Unused" status="run" result="completed" time="0" timestamp="2021-10-13T21:42:50" classname="Accessors" />
+  </testsuite>
+  <testsuite name="Modifiers" tests="1" failures="0" disabled="0" errors="0" time="0.001" timestamp="2021-10-13T21:42:50">
+    <testcase name="Unused" status="run" result="completed" time="0.001" timestamp="2021-10-13T21:42:50" classname="Modifiers" />
+  </testsuite>
+  <testsuite name="RelationalOperators" tests="1" failures="0" disabled="0" errors="0" time="0" timestamp="2021-10-13T21:42:50">
+    <testcase name="Unused" status="run" result="completed" time="0" timestamp="2021-10-13T21:42:50" classname="RelationalOperators" />
+  </testsuite>
+  <testsuite name="StreamInsertion" tests="1" failures="0" disabled="0" errors="0" time="0" timestamp="2021-10-13T21:42:50">
+    <testcase name="Unused" status="run" result="completed" time="0" timestamp="2021-10-13T21:42:50" classname="StreamInsertion" />
+  </testsuite>
+  <testsuite name="StreamExtraction" tests="1" failures="0" disabled="0" errors="0" time="0" timestamp="2021-10-13T21:42:50">
+    <testcase name="Unused" status="run" result="completed" time="0" timestamp="2021-10-13T21:42:50" classname="StreamExtraction" />
+  </testsuite>
+</testsuites>

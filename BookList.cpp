@@ -69,6 +69,7 @@ std::size_t BookList::books_sl_list_size() const
       /// number of elements visited.  The STL's std::distance() function does that, or you can write your own loop.
       //https://www.geeksforgeeks.org/find-length-of-a-linked-list-iterative-and-recursive/
 
+
     return std::distance(_books_sl_list.begin(), _books_sl_list.end());
 
 
@@ -122,7 +123,7 @@ BookList& BookList::operator+=(const std::initializer_list<Book> &rhs)
 
     for (auto book : rhs)
     {
-        insert(book, Position::BOTTOM);
+        BookList::insert(book, Position::BOTTOM);
     }
 
     /////////////////////// END-TO-DO (2) ////////////////////////////
@@ -144,18 +145,11 @@ BookList& BookList::operator+=(const BookList & rhs)
 
     for (auto book : rhs._books_vector)
     {
-        insert(book, Position::BOTTOM);
+        BookList::insert(book, Position::BOTTOM);
     }
 
 
-    /*
-    for (int i = 0; i < _books_vector.size(); i++)
-    {
-        Book book = _books_vector[i];
 
-        insert(book, Position::BOTTOM);
-    }
-    */
     /////////////////////// END-TO-DO (3) ////////////////////////////
 
     // Verify the internal book list state is still consistent amongst the four containers
@@ -187,7 +181,7 @@ std::size_t BookList::size() const
     return size;
     */
 
-    return _books_vector.size();
+    return _books_array_size;
 
     /////////////////////// END-TO-DO (4) ////////////////////////////
 }
@@ -217,20 +211,6 @@ std::size_t BookList::find(const Book & book) const
         }
 
 
-    /*
-    size_t pos = size();
-    for (int i = 0; i < size(); i--)
-    {
-        if (_books_vector[i] == book)
-        {
-            pos = i;
-            return pos;
-        }
-        else {
-      return size();
-    }
-  }
-  */
     /////////////////////// END-TO-DO (5) ////////////////////////////
 }
 
@@ -271,13 +251,9 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
     ///////////////////////// TO-DO (6) //////////////////////////////
       /// Silently discard duplicate items from getting added to the book list.  If the to-be-inserted book is already in the list,
       /// simply return.
-      /*
-    if (find(book) == size())
-    {
-        return *this;
-    }
-    */
-    if (offsetFromTop != find(book))
+
+
+    if (find(book) != size())
     {
         return *this;
     }
@@ -327,7 +303,6 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
 
 
 
-
         /////////////////////// END-TO-DO (7) ////////////////////////////
     }  // Insert into array
 
@@ -346,19 +321,11 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
 
 
 
-        _books_vector.insert(std::next(_books_vector.begin(), offsetFromTop), book);
+        _books_vector.insert(_books_vector.begin() + offsetFromTop, book);
 
 
 
-        /*
-        if (offsetFromTop < size()) {
-        for (int i = 0; i < offsetFromTop; i++)
-        {
-          _books_vector.begin();
-        }
-        std::next(_books_vector.begin());
-      }
-      */
+
         /////////////////////// END-TO-DO (8) ////////////////////////////
     } // Insert into vector
 
@@ -374,15 +341,7 @@ BookList& BookList::insert(const Book & book, std::size_t offsetFromTop)       /
 
         _books_dl_list.insert(std::next(_books_dl_list.begin(), offsetFromTop), book);
 
-        /*
-        if (offsetFromTop < size()) {
-        for (int i = 0; i < offsetFromTop; i++)
-        {
-          _books_dl_list.begin();
-        }
-        std::next(_books_dl_list.begin());
-      }
-      */
+
         /////////////////////// END-TO-DO (9) ////////////////////////////
     } // Insert into doubly linked list
 
@@ -443,15 +402,14 @@ BookList& BookList::remove(std::size_t offsetFromTop)
           /// "std::move()" example and in "Vector (simplified)/Vector.hpp" for a "write your own loop" example.  Also see
           /// RationalArray::remove() in RationalArray.cpp in our Rational Number Case Study examples.
 
-        if (offsetFromTop < size()) {
-        for (int i = offsetFromTop; i < size(); i++)
-        {
-            _books_array[i] = _books_array[i + 1];
-        }
 
-        _books_array_size--;
 
-      }
+      std::move(_books_array.begin() + offsetFromTop + 1,
+                _books_array.begin() + _books_array_size,
+                _books_array.begin() + offsetFromTop);
+                --_books_array_size;
+      _books_array[_books_array_size] = {};
+
         /////////////////////// END-TO-DO (11) ////////////////////////////
     } // Remove from array
 
@@ -520,13 +478,12 @@ BookList& BookList::moveToTop(const Book & book)
       /// this book list.
 
 
-    if (BookList::find(book))
-    {
-        BookList::remove(book);
-        BookList::insert(book);
-    }
 
-    return *this;
+    if (auto i = find(book); i != size()){
+      remove (i);
+      insert(book, Position::TOP);
+
+    }
 
     /////////////////////// END-TO-DO (15) ////////////////////////////
     // Verify the internal book list state is still consistent amongst the four containers
@@ -586,13 +543,16 @@ std::istream& operator>>(std::istream & stream, BookList & bookList)
       /// by the ostream operator above into an object properly.
 
     stream >> count;
-    Book book;
+
     for (int i = 0; i < count; i++)
     {
+        Book book;
         stream.ignore(5);
         stream >> book;
         bookList.insert(book, i);
     }
+
+
 
     /////////////////////// END-TO-DO (16) ////////////////////////////
 
@@ -628,6 +588,7 @@ int BookList::compare(const BookList & other) const
       /// Booklist is the same - so pick one to walk. If the books are different, you have your answer. If you get all the way to the
       /// end of the list and found no books that are different, you have your answer:  the lists are equal.
 
+
     if (size() < other.size())
     {
         return -1;
@@ -652,6 +613,7 @@ int BookList::compare(const BookList & other) const
     }
 
     return 0;
+
 
     /////////////////////// END-TO-DO (17) ////////////////////////////
 }
